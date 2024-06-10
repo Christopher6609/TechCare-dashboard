@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "manrope", system-ui, sans-serif;
+  }
+}
+
+.liner{
+  border:1px solid black;
+}
+
+.linerred{
+  border:1px solid red;
+}
+
+.linerblue{
+  border:1px solid blue;
+}
