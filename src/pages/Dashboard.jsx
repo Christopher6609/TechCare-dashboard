@@ -6,11 +6,17 @@ import { faCalendar, faCaretDown, faCaretUp, faCircle, faContactCard, faCreditCa
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PatientCard from "../components/molecules/PatientCard";
 
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
+
 ChartJS.register(LinearScale, CategoryScale, BarElement, PointElement, LineElement, Tooltip);
 
+
+
 export default function Dashboard(){
-    const [user,setUser] = useState({});
-    const [users, setUsers] = useState([]);
+
+    const {users,currentUser} = useContext(UserContext);    
+
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: [
@@ -18,36 +24,10 @@ export default function Dashboard(){
            { label: "", data: [], borderColor: "#7E6CAB", tension: 0.3 }
         ],
      });
-
-    let username = 'coalition';
-    let password = 'skills-test';
-    let auth = btoa(`${username}:${password}`);
-    const filterCriteria = "Jessica Taylor";
     
-    const fetchData = () => {
-        fetch(`https://fedskillstest.coalitiontechnologies.workers.dev`, {
-            headers: {
-                'Authorization':`Basic ${auth}`
-            }
-        }).then(function (response){
-            if(response.ok){
-                return response.json()
-            } throw response;
-        }).then(function (data){
-            const patient = data.find(item => item.name === filterCriteria);
-            setUsers(data);
-            setUser(patient);
-        }).catch(function (error){
-            console.warn(error);
-        })
-      };
-    
-    useEffect(() => {
-        fetchData();
-      }, []);
 
       useEffect(() => {
-        const history = user?.diagnosis_history?.slice(0, 6) || [];
+        const history = currentUser?.diagnosis_history?.slice(0, 6) || [];
         const labels = [];
         const systolicData = [];
         const diastolicData = [];
@@ -64,7 +44,7 @@ export default function Dashboard(){
               { ...prevState.datasets[1], data: diastolicData }
            ],
         }));
-     }, [user]);
+     }, [currentUser]);
      const options = {
         responsive: true,
         scales: {
@@ -77,10 +57,10 @@ export default function Dashboard(){
      };
   
     
-    const diagnosticList = user.diagnostic_list || [];
+    const diagnosticList = currentUser.diagnostic_list || [];
   
     
-    
+
 
 
   return ( 
@@ -138,7 +118,7 @@ export default function Dashboard(){
                                 <FontAwesomeIcon icon={faSearch} />
                             </div>
                             <div>
-                                {users.map((patient)=> {
+                                {Object.values(users).map((patient)=> {
                                     const {name, gender, age, profile_picture} = patient;
                                     return (
                                         <PatientCard key={name} name={name} sex={gender} age={age} img={profile_picture}/>
@@ -274,10 +254,10 @@ export default function Dashboard(){
         
                                 <div className="flex flex-col items-center justify-center gap-[24px]">
                                     <div className="w-[200px] h-[200px]">
-                                        <img className="object-contain w-full h-full" src={user.profile_picture} />
+                                        <img className="object-contain w-full h-full" src={currentUser.profile_picture} />
                                     </div>
                                     <div>
-                                        <h2 className="text-[24px] font-[800]">{user.name}</h2>
+                                        <h2 className="text-[24px] font-[800]">{currentUser.name}</h2>
                                     </div>
                                 </div>
                                 <div className="py-[32px] space-y-[24px]">
@@ -287,7 +267,7 @@ export default function Dashboard(){
                                         </div>
                                         <div>
                                             <h3 className="text-[14px] capitalize font-normal">Date of Birth</h3>
-                                            <p className="text-[14px] font-bold capitalize ">{user.date_of_birth}</p>
+                                            <p className="text-[14px] font-bold capitalize ">{currentUser.date_of_birth}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-[16px]">
@@ -296,7 +276,7 @@ export default function Dashboard(){
                                         </div>
                                         <div>
                                             <h3 className="text-[14px] capitalize font-normal">Gender</h3>
-                                            <p className="text-[14px] font-bold capitalize ">{user.gender}</p>
+                                            <p className="text-[14px] font-bold capitalize ">{currentUser.gender}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-[16px]">
@@ -305,7 +285,7 @@ export default function Dashboard(){
                                         </div>
                                         <div>
                                             <h3 className="text-[14px] capitalize font-normal">Contact info</h3>
-                                            <p className="text-[14px] font-bold capitalize ">{user.phone_number}</p>
+                                            <p className="text-[14px] font-bold capitalize ">{currentUser.phone_number}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-[16px]">
@@ -314,7 +294,7 @@ export default function Dashboard(){
                                         </div>
                                         <div>
                                             <h3 className="text-[14px] capitalize font-normal">Emergency Contacts</h3>
-                                            <p className="text-[14px] font-bold capitalize ">{user.emergency_contact}</p>
+                                            <p className="text-[14px] font-bold capitalize ">{currentUser.emergency_contact}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-[16px]">
@@ -323,7 +303,7 @@ export default function Dashboard(){
                                         </div>
                                         <div>
                                             <h3 className="text-[14px] capitalize font-normal">Insurance Provider </h3>
-                                            <p className="text-[14px] font-bold capitalize ">{user.insurance_type}</p>
+                                            <p className="text-[14px] font-bold capitalize ">{currentUser.insurance_type}</p>
                                         </div>
                                     </div>
                                     
