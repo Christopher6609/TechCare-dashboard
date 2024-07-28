@@ -1,13 +1,12 @@
-//import React from 'react';
-import { useState, useEffect } from "react";
+
 import { Chart as ChartJS, LineElement, CategoryScale, PointElement, LinearScale, BarElement, Tooltip } from "chart.js";
-import { Line,  } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { faCalendar, faCaretDown, faCaretUp, faCircle, faContactCard, faCreditCard, faDownload, faEllipsisV, faGear, faHome, faMessage, faPhone, faSearch, faShield, faVenus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PatientCard from "../components/molecules/PatientCard";
-
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
+import { ChartContext } from "../context/chartContext";
 
 ChartJS.register(LinearScale, CategoryScale, BarElement, PointElement, LineElement, Tooltip);
 
@@ -15,58 +14,14 @@ ChartJS.register(LinearScale, CategoryScale, BarElement, PointElement, LineEleme
 
 export default function Dashboard(){
 
-    const {users,currentUser} = useContext(UserContext);    
-
-    const [chartData, setChartData] = useState({
-        labels: [],
-        datasets: [
-           { label: "", data: [], borderColor: "#C26EB4", tension: 0.3 },
-           { label: "", data: [], borderColor: "#7E6CAB", tension: 0.3 }
-        ],
-     });
-    
-
-      useEffect(() => {
-        const history = currentUser?.diagnosis_history?.slice(0, 6) || [];
-        const labels = [];
-        const systolicData = [];
-        const diastolicData = [];
-        history.forEach(h => {
-           labels.push(`${h.month.slice(0, 3)}, ${h.year}`);
-           systolicData.push(h?.blood_pressure?.systolic?.value);
-           diastolicData.push(h?.blood_pressure?.diastolic?.value);
-        });
-        setChartData(prevState => ({
-           ...prevState,
-           labels,
-           datasets: [
-              { ...prevState.datasets[0], data: systolicData },
-              { ...prevState.datasets[1], data: diastolicData }
-           ],
-        }));
-     }, [currentUser]);
-     const options = {
-        responsive: true,
-        scales: {
-           x: { title: { display: true, text: "" }, grid: { display: false } },
-           y: { title: { display: true, text: "" }, ticks: { callback: value => `${value}`, stepSize: 20 } },
-        },
-        maintainAspectRatio: false,
-        plugins: { tooltip: { enabled: true }, title: { display: true, text: "Hover tooltip" } },
-        title: {display:true, text:"Blood"}
-     };
-  
-    
+    const {users,currentUser} = useContext(UserContext); 
+    const { chartData, options } = useContext(ChartContext)   
     const diagnosticList = currentUser.diagnostic_list || [];
   
-    
-
-
 
   return ( 
 
     <>
-        
                 <main className="px-[18px] bg-[#F6F7F8]">
                 <nav className="h-[72px] w-full rounded-[70px] opacity-[1px] bg-[#FFF] px-[32px] py-[12px] flex items-center justify-between">
                     <div className="w-[211px] h-[48px]">
