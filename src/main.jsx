@@ -7,10 +7,10 @@ import { ChartProvider } from './context/chartContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-  <UserProvider>
-  <ChartProvider>
-  <App />
-  </ChartProvider>
-  </UserProvider>
-  </React.StrictMode>,
+    <UserProvider>
+      <ChartProvider>
+        <App />
+      </ChartProvider>
+    </UserProvider>
+</React.StrictMode>,
 )
